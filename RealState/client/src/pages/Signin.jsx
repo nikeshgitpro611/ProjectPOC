@@ -1,14 +1,24 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  signinFailure,
+  signinStart,
+  signinSuccess,
+} from "../redux/slice/userSlice";
 
 const SignIn = () => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  let test = useSelector((state) => state.user);
+  console.log("test", test);
+  
+
+  const { loading, error } = useSelector((state) => state.user);
   const [formattedData, setFormattedData] = useState({
-    
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,10 +27,11 @@ const SignIn = () => {
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    // setLoading(true);
+    // setError(null);
 
     try {
+      dispatch(signinStart());
       const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -33,27 +44,33 @@ const SignIn = () => {
       console.log("dataPass Confirm :::: ", data);
 
       if (!response.ok) {
-        setError(data?.message || "Something went wrong. Please try again.");
+        dispatch(
+          signinFailure(
+            data?.message || "Something went wrong. Please try again."
+          )
+        );
+        // setError(data?.message || "Something went wrong. Please try again.");
       } else {
+        dispatch(signinSuccess(data));
         navigate("/");
       }
     } catch (err) {
-      setError("Failed to connect to the server. Please try again later.");
+      dispatch(
+        signinFailure("Failed to connect to the server. Please try again.")
+      );
+      // setError("Failed to connect to the server. Please try again later.");
       console.error("Error:", err);
     } finally {
-      setLoading(false);
-      setFormattedData({ username: "", email: "", password: "" });
+      // setLoading(false);
+      dispatch(signinSuccess(data));
+      setFormattedData({ email: "", password: "" });
     }
   };
-
-  console.log("formattedData", formattedData, error);
 
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
       <form onSubmit={handelSubmit} className="flex flex-col gap-4">
-        
-
         <input
           type="email"
           placeholder="Email"
