@@ -12,25 +12,27 @@ export const counterSlice = createSlice({
   reducers: {
     signinStart: (state) => {
       state.loading = true;
-      //   state.error = null;
+      state.error = null;
+    },
+    conditionError: (state) => {
+      state.loading = false;
+      state.error = null;
     },
     signinSuccess: (state, action) => {
-      console.log("action.payload", action.payload);
 
-      state.loading = false;
       state.currentUser = action.payload;
+      state.loading = false;
       state.error = null;
     },
     signinFailure: (state, action) => {
-      console.log("action.payload for failed condition", action.payload);
-
+        
       state.loading = false;
       state.error = action.payload;
     },
   },
 });
 
-export const { signinStart, signinSuccess, signinFailure } =
+export const { signinStart, signinSuccess, signinFailure, conditionError } =
   counterSlice.actions;
 
 export default counterSlice.reducer;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [headerSearch, setHeaderSearch] = useState("");
@@ -15,6 +16,10 @@ const Header = () => {
     e.preventDefault();
     console.log("submit : ", headerSearch);
   };
+
+  const { currentUser } = useSelector((state) => state.user);
+  console.log("currentUser", currentUser);
+
   return (
     <header className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
@@ -49,14 +54,24 @@ const Header = () => {
         </form>
 
         <ul className="flex gap-4">
-          {navItems.map((item) => (
-            <li
-              key={item.label}
-              className="hidden sm:inline text-slate-700 hover:underline hover:text-slate-900"
-            >
-              <Link to={item.path}>{item.label}</Link>
-            </li>
-          ))}
+          {currentUser ? (
+            <Link to="/profile">
+              <img
+                src={currentUser?.avatar}
+                alt="profile"
+                className="w-8 h-8 rounded-full"
+              />
+            </Link>
+          ) : (
+            navItems.map((item) => (
+              <li
+                key={item.label}
+                className="hidden sm:inline text-slate-700 hover:underline hover:text-slate-900"
+              >
+                <Link to={item.path}>{item.label}</Link>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </header>
