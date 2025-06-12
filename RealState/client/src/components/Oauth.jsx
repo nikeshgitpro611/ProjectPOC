@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { signinSuccess } from "../redux/slice/userSlice";
 
 const Oauth = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -20,7 +22,7 @@ const Oauth = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(result.user),
-      })
+      });
 
       const data = await response.json();
       dispatch(signinSuccess(data));
@@ -32,8 +34,6 @@ const Oauth = () => {
     }
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   return (
     // <div>
     <button

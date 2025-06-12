@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import Listing from "../models/listing.modal.js";
 export const usersController = (req, res) => {
   res.send("user Pass Route");
 };
@@ -91,5 +92,46 @@ export const google = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(403, "You can only delete your account"));
+
+  try {
+    await User.findByIdAndDelete(req.params._id);
+    res.clearCookie("access_token");
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signOut = async (req, res, next) => {
+  try {
+    res.clearCookie("Access-Token");
+    res.status(200).json({ message: "User signed out successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserListings = async (req, res, next) => {
+  console.log( req);;
+  // res.status(200).send("user Pass Route");
+  
+  if ( req.params.id) {
+    console.log("req.params.id", req.params.id);
+    
+    try {
+      // const user = await User.findById(req.params.id);
+      const listing = await Listing.find({ userRef: req.params.id });
+      res.status(200).json(listing);
+    } catch (error) {
+      next(error);
+    }
+  }else{
+    return next(errorHandler(403, "You can only get your listings"));
   }
 };

@@ -4,6 +4,8 @@ let initialState = {
   currentUser: null,
   loading: false,
   error: null,
+  progress: 0,
+  status: "",
 };
 
 export const counterSlice = createSlice({
@@ -29,10 +31,27 @@ export const counterSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    progressUpload: (state, action) => {
+      const { progress, status } = action.payload;
+      state.progress = progress;
+      state.status = status;
+      // console.log("action.payload", action.payload);
+      
+    },
+    deleteSuccess: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
+
+     deleteUserFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
 
-export const { signinStart, signinSuccess, signinFailure, conditionError } =
+export const { signinStart, signinSuccess, signinFailure, conditionError, progressUpload, deleteSuccess, deleteUserFailure } =
   counterSlice.actions;
 
 export default counterSlice.reducer;

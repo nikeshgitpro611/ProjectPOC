@@ -15,9 +15,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    avatar : {
+    avatar: {
       type: String,
-      default: "https://gravatar.com/avatar/84e1f17f2ff0646da0c4257e165ff82f?s=400&d=robohash&r=x",
+      default:
+        "https://gravatar.com/avatar/84e1f17f2ff0646da0c4257e165ff82f?s=400&d=robohash&r=x",
     },
   },
   { timestamps: true }

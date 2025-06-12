@@ -18,7 +18,6 @@ const Header = () => {
   };
 
   const { currentUser } = useSelector((state) => state.user);
-  console.log("currentUser", currentUser);
 
   return (
     <header className="bg-slate-200 shadow-md">
@@ -54,23 +53,23 @@ const Header = () => {
         </form>
 
         <ul className="flex gap-4">
-          {currentUser ? (
-            <Link to="/profile">
-              <img
-                src={currentUser?.avatar}
-                alt="profile"
-                className="w-8 h-8 rounded-full"
-              />
-            </Link>
-          ) : (
-            navItems.map((item) => (
+          {navItems.map((item) =>
+            currentUser && item.label === "Signin" ? (
+              <Link to="/profile" key={item.label}>
+                <img
+                  src={currentUser?.avatar}
+                  alt="profile"
+                  className="w-8 h-8 rounded-full cursor-pointer border-2 border-slate-600"
+                />
+              </Link>
+            ) : (
               <li
                 key={item.label}
                 className="hidden sm:inline text-slate-700 hover:underline hover:text-slate-900"
               >
                 <Link to={item.path}>{item.label}</Link>
               </li>
-            ))
+            )
           )}
         </ul>
       </div>
